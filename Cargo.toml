@@ -1,0 +1,15 @@
+[package]
+name = "sgl_derive"
+version = "0.0.1"
+authors = ["Radviger <radviger@gmail.com>"]
+description = "A macro crate for sgl derive macros"
+edition = "2021"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+quote = "1"
+proc-macro2 = "1.0"
+syn = { version = "2.0", features = ["full"] }
+heck = "0.5"
