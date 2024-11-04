@@ -184,11 +184,13 @@ pub fn vertex(_args: TokenStream, input: TokenStream) -> TokenStream {
                     #ident: #ident.into()
                 });
                 attributes.push(quote! {
-                    const CNAME: &[u8] = concat!(#field_name, "\0").as_bytes();
-                    let name = unsafe { std::ffi::CStr::from_bytes_with_nul_unchecked(CNAME) };
-                    let attribute = program.attribute::<#ty>(name)
-                        .ok_or(sgl::shader::ProgramError::AttributeMissing(#field_name))?;
-                    attribute.bind(#i as u32);
+                    {
+                        const CNAME: &[u8] = concat!(#field_name, "\0").as_bytes();
+                        let name = unsafe { std::ffi::CStr::from_bytes_with_nul_unchecked(CNAME) };
+                        let attribute = program.attribute::<#ty>(name)
+                            .ok_or(sgl::shader::ProgramError::AttributeMissing(#field_name))?;
+                        attribute.bind(#i as u32);
+                    }
                 });
             }
         }
