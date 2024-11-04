@@ -30,12 +30,12 @@ pub fn vertex(_args: TokenStream, input: TokenStream) -> TokenStream {
                 if count == 0 {
                     return quote_spanned! {
                         f.span() =>
-                        compile_error!("vertex fields must have a #[usage]");
+                        compile_error!(concat!("field ", #field_name, " must have a usage attribute"));
                     }.into();
                 } else if count != 1 {
                     return quote_spanned! {
                         f.span() =>
-                        compile_error!("vertex fields must have exactly one attribute");
+                        compile_error!(concat!("field ", #field_name, " must have exactly one attribute"));
                     }.into();
                 }
                 for a in &f.attrs {
@@ -255,7 +255,6 @@ pub fn program(_args: TokenStream, input: TokenStream) -> TokenStream {
                 initializers.push(quote! {
                     linked.uniform::<#ty>({
                         const CNAME: &[u8] = concat!(#field_name, "\0").as_bytes();
-                        eprintln!("{:?}", CNAME);
                         unsafe { std::ffi::CStr::from_bytes_with_nul_unchecked(CNAME) }
                     })
                     .ok_or(ProgramError::UniformMissing(#field_name))?.into_inner() as i32,
